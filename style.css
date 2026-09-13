@@ -22,6 +22,8 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 body {
@@ -29,7 +31,10 @@ body {
     color: var(--text-main);
     font-family: var(--font-modern);
     overflow-x: hidden;
+    width: 100%;
     line-height: 1.6;
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
 }
 
 /* Ambient Background */
@@ -357,8 +362,8 @@ body {
 
 .feature-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
 }
 
 .feature-card {
@@ -1265,5 +1270,357 @@ body.tutorial-active #tutorial-overlay {
         transform: none !important;
         animation: none !important;
         transition: none !important;
+    }
+}
+
+
+/* ==========================================================================
+   COMPREHENSIVE RESPONSIVE MATRIX: SMARTPHONES & TABLETS (PORTRAIT & LANDSCAPE)
+   ========================================================================== */
+
+/* Fluid Core Containers */
+.container,
+.nav-container,
+.features,
+.download-section,
+.security-section,
+.cta-section {
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+/* Fluid Typography across viewport scales */
+.antique-title {
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
+}
+
+.kinetic-subheading {
+    font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+}
+
+.kinetic-subheading-macos {
+    font-size: clamp(1.35rem, 3.5vw, 2.1rem);
+}
+
+.glass-card {
+    padding: clamp(1.25rem, 4vw, 3rem);
+    border-radius: clamp(16px, 3vw, 24px);
+}
+
+/* Responsive Stats System */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: clamp(1rem, 2.5vw, 2rem);
+    margin-top: 3rem;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stats-container .stat-card {
+    padding: clamp(1.2rem, 3vw, 1.8rem) clamp(1rem, 2vw, 2rem) !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+.stat-number {
+    font-size: clamp(1.8rem, 4vw, 2.5rem) !important;
+}
+
+.stat-label {
+    font-size: clamp(0.75rem, 2vw, 0.9rem) !important;
+}
+
+/* Responsive Download Buttons */
+.download-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    justify-content: center;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.btn-download {
+    min-width: 0 !important;
+    width: 100%;
+    padding: clamp(0.9rem, 2vw, 1.2rem) clamp(1rem, 2.5vw, 2rem);
+    box-sizing: border-box;
+}
+
+/* Terminal & macOS Tutorial Responsive */
+.macos-tutorial-section {
+    padding: clamp(1rem, 3vw, 2rem) !important;
+    margin-top: clamp(2rem, 5vw, 4rem) !important;
+}
+
+.macos-tutorial-section img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 700px !important;
+}
+
+.terminal-code-container {
+    padding: clamp(0.85rem, 2.5vw, 1.5rem) !important;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.terminal-code-container code {
+    word-break: break-all;
+    font-size: clamp(0.75rem, 2.2vw, 0.95rem);
+    white-space: pre-wrap;
+}
+
+/* Responsive Countdown */
+.countdown-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: clamp(8px, 2vw, 20px);
+    margin: 2rem 0;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.countdown-item {
+    flex: 1 1 clamp(65px, 18vw, 100px);
+    max-width: 110px;
+    min-width: 65px;
+    padding: clamp(12px, 2vw, 20px) clamp(8px, 1.5vw, 15px);
+    box-sizing: border-box;
+}
+
+.countdown-value {
+    font-size: clamp(1.6rem, 5vw, 3rem);
+}
+
+.countdown-label {
+    font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+}
+
+/* ----------------------------------------------------
+   TABLETS (Portrait & Landscape: 768px - 1024px)
+   e.g. iPad, iPad Air, iPad Pro, Galaxy Tab
+   ---------------------------------------------------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .nav-container {
+        padding: 0 1.5rem;
+    }
+    
+    .nav-links {
+        display: flex !important;
+        gap: 1rem;
+    }
+    
+    .nav-links a {
+        font-size: 0.9rem;
+    }
+
+    .hero {
+        margin-top: 6.5rem;
+        padding: 0 2rem;
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.5rem;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .download-buttons {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .btn-download {
+        padding: 1rem 1rem;
+    }
+
+    .btn-title {
+        font-size: 0.95rem;
+    }
+
+    .btn-sub {
+        font-size: 0.8rem;
+    }
+}
+
+/* ----------------------------------------------------
+   SMARTPHONES PORTRAIT (max-width: 640px)
+   e.g. iPhone, Pixel, Galaxy held vertically
+   ---------------------------------------------------- */
+@media (max-width: 640px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .logo-img {
+        height: 32px;
+    }
+
+    .logo-text-main {
+        font-size: 1.15rem;
+    }
+
+    .logo-text-sub {
+        font-size: 0.72rem;
+    }
+
+    .hero {
+        margin-top: 5.5rem;
+        padding: 0 1rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 320px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        gap: 0.85rem;
+    }
+
+    .hero-actions .btn-primary,
+    .hero-actions .btn-secondary,
+    .hero-actions .btn-youtube,
+    .hero-actions .tutorial-wrapper {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem;
+    }
+
+    .feature-card {
+        padding: 1.35rem;
+    }
+
+    .feature-header {
+        margin-bottom: 1rem;
+    }
+
+    .feature-header h3 {
+        font-size: 1.25rem;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .download-buttons {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .faq-item {
+        padding: 1.25rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cta-card {
+        padding: 2rem 1.25rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+
+    .cta-buttons a {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+/* ----------------------------------------------------
+   SMARTPHONES LANDSCAPE (max-height: 520px & landscape)
+   e.g. iPhone, Pixel, Galaxy held horizontally
+   ---------------------------------------------------- */
+@media (max-height: 520px) and (orientation: landscape) {
+    .navbar {
+        padding: 0.4rem 0;
+    }
+
+    .hero {
+        margin-top: 4.2rem;
+        margin-bottom: 2rem;
+        min-height: auto;
+    }
+
+    .kinetic-hero-title {
+        font-size: clamp(1.6rem, 5vw, 2.2rem);
+        margin-bottom: 0.75rem;
+    }
+
+    .hero-desc.kinetic-desc {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .hero-actions {
+        flex-direction: row !important;
+        gap: 0.75rem;
+        margin-top: 1rem !important;
+        margin-bottom: 1.5rem !important;
+        flex-wrap: wrap;
+    }
+
+    .hero-actions .btn-primary,
+    .hero-actions .btn-secondary,
+    .hero-actions .btn-youtube {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        width: auto !important;
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem;
+    }
+
+    .feature-card {
+        padding: 1.2rem;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.75rem;
+    }
+
+    .download-buttons {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.75rem;
+    }
+
+    .btn-download {
+        padding: 0.75rem 1rem;
+    }
+
+    .btn-title {
+        font-size: 0.9rem;
+    }
+
+    .btn-sub {
+        font-size: 0.75rem;
     }
 }
