@@ -99,9 +99,18 @@ document.addEventListener('DOMContentLoaded', () => {
             latestStats.downloads += 1;
             if (statDownloadsEl) {
                 const currentVal = parseInt(statDownloadsEl.innerText.replace(/,/g, '') || '0', 10);
-                animateValue(statDownloadsEl, currentVal, currentVal + 1, 300);
+                animateValue(statDownloadsEl, currentVal, latestStats.downloads, 400);
             }
-            fetch('/api/stats?download=1&t=' + Date.now()).catch(() => {});
+            const dlUrl = '/api/stats?download=1&t=' + Date.now();
+            try {
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon(dlUrl);
+                } else {
+                    fetch(dlUrl, { keepalive: true }).catch(() => {});
+                }
+            } catch (err) {
+                fetch(dlUrl, { keepalive: true }).catch(() => {});
+            }
         });
     });
 
