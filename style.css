@@ -1059,20 +1059,21 @@ body.tutorial-active #tutorial-overlay {
     font-family: var(--font-antique);
     font-size: clamp(2.2rem, 4.5vw, 3.4rem);
     font-weight: 700;
-    line-height: 1.25;
+    line-height: 1.3;
     letter-spacing: -0.02em;
     text-align: center;
     margin-bottom: 1.2rem;
     position: relative;
     cursor: default;
     display: block;
+    word-break: break-word;
 }
 
 .kinetic-subheading-macos {
     font-family: var(--font-antique);
     font-size: clamp(1.6rem, 3.5vw, 2.2rem);
     font-weight: 700;
-    line-height: 1.3;
+    line-height: 1.35;
     letter-spacing: -0.01em;
     text-align: center;
     color: #ffffff;
@@ -1081,15 +1082,16 @@ body.tutorial-active #tutorial-overlay {
     display: block;
 }
 
-/* Base Word Split & Stagger Entrance (from /better-ui: 80ms stagger) */
+/* Base Word Split & Stagger Entrance (/better-ui: 80ms stagger) */
 .reveal .k-word {
     display: inline-block;
     opacity: 0;
-    transform: translateY(28px);
-    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-    margin: 0 0.1em;
+    transform: translateY(24px);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    margin: 0 0.12em;
     color: #ffffff;
+    vertical-align: baseline;
 }
 
 .reveal.active .k-word {
@@ -1104,27 +1106,27 @@ body.tutorial-active #tutorial-overlay {
 .reveal.active .k-word:nth-child(5) { transition-delay: 0.32s; }
 .reveal.active .k-word:nth-child(6) { transition-delay: 0.40s; }
 
-/* The Accent Word: Physical Kinetic Movement & Floating Sway */
+/* The Accent Container (Whole Word Group) */
 .k-accent {
     display: inline-block;
     position: relative;
     font-style: italic;
-    padding: 0 0.12em 0.2em;
-    margin: 0 0.12em;
+    padding: 0 0.12em 0.15em;
+    margin: 0 0.15em;
     vertical-align: baseline;
     cursor: pointer;
     will-change: transform;
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: 0.20s;
+    transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.18s;
 }
 
 .reveal.active .k-accent {
     opacity: 1;
     transform: translateY(0);
-    animation: kWordFloat 3.8s ease-in-out infinite alternate;
+    animation: kWordFloat 3.6s ease-in-out infinite alternate;
 }
 
 /* Continuous Floating Sway Motion */
@@ -1133,59 +1135,64 @@ body.tutorial-active #tutorial-overlay {
         transform: translateY(0px) rotate(0deg);
     }
     50% {
-        transform: translateY(-5px) rotate(-1deg);
+        transform: translateY(-4px) rotate(-1deg);
     }
     100% {
-        transform: translateY(3px) rotate(0.8deg);
+        transform: translateY(2.5px) rotate(0.8deg);
+    }
+}
+
+/* Physical Kinetic Bouncing Motion (Gerak-gerak berterusan pada perkataan) */
+.k-bounce {
+    display: inline-block;
+    will-change: transform;
+    animation: kWordBob 2.2s ease-in-out infinite;
+    margin: 0 0.05em;
+    vertical-align: baseline;
+    font-style: italic;
+}
+
+.k-bounce-1 {
+    animation-delay: 0.00s;
+}
+
+.k-bounce-2 {
+    animation-delay: 0.35s;
+}
+
+@keyframes kWordBob {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    35% {
+        transform: translateY(-8px) scale(1.02);
+    }
+    68% {
+        transform: translateY(2px) scale(0.99);
     }
 }
 
 /* Interactive Spring Hover (/better-ui: cubic-bezier spring response) */
 .k-accent:hover {
     animation-play-state: paused !important;
-    transform: translateY(-8px) scale(1.06) !important;
+    transform: translateY(-7px) scale(1.05) !important;
     transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1) !important;
 }
 
-.k-accent:hover .k-char {
+.k-accent:hover .k-bounce {
     animation-play-state: paused !important;
-}
-
-/* Individual Character Undulating Wave (Gerak-gerak berterusan) */
-.k-char {
-    display: inline-block;
-    will-change: transform;
-    animation: kCharBob 2.2s ease-in-out infinite;
-    animation-delay: var(--d, 0s);
-}
-
-.k-space {
-    display: inline-block;
-    width: 0.26em;
-}
-
-@keyframes kCharBob {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    30% {
-        transform: translateY(-7px);
-    }
-    65% {
-        transform: translateY(2.5px);
-    }
 }
 
 /* Kinetic Animated Underline */
 .k-underline {
     position: absolute;
-    bottom: -3px;
+    bottom: -2px;
     left: 4%;
     width: 92%;
     height: 3px;
     border-radius: 999px;
     pointer-events: none;
-    animation: kUnderlineSlide 3s ease-in-out infinite alternate;
+    animation: kUnderlineSlide 2.8s ease-in-out infinite alternate;
 }
 
 @keyframes kUnderlineSlide {
@@ -1203,10 +1210,10 @@ body.tutorial-active #tutorial-overlay {
     }
 }
 
-/* Color Palettes (Crisp, High Contrast, Luxury Gradient, No Muddy Glow) */
-.k-accent-purple {
-    color: #c084fc;
-    background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 45%, #a855f7 100%);
+/* Color Palettes (Applied cleanly to the bounce text directly) */
+.k-accent-purple .k-bounce {
+    color: #d8b4fe;
+    background: linear-gradient(135deg, #f5d0fe 0%, #c084fc 50%, #a855f7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -1215,7 +1222,7 @@ body.tutorial-active #tutorial-overlay {
     background: linear-gradient(90deg, transparent, #c084fc, #a855f7, transparent);
 }
 
-.k-accent-gold {
+.k-accent-gold .k-bounce {
     color: #FFD700;
     background: linear-gradient(135deg, #fffbeb 0%, #FFD700 50%, #F59E0B 100%);
     -webkit-background-clip: text;
@@ -1226,7 +1233,7 @@ body.tutorial-active #tutorial-overlay {
     background: linear-gradient(90deg, transparent, #FFD700, #F59E0B, transparent);
 }
 
-.k-accent-blue {
+.k-accent-blue .k-bounce {
     color: #38bdf8;
     background: linear-gradient(135deg, #e0f2fe 0%, #38bdf8 50%, #60a5fa 100%);
     -webkit-background-clip: text;
@@ -1237,7 +1244,7 @@ body.tutorial-active #tutorial-overlay {
     background: linear-gradient(90deg, transparent, #38bdf8, #60a5fa, transparent);
 }
 
-.k-accent-cosmic {
+.k-accent-cosmic .k-bounce {
     color: #f43f5e;
     background: linear-gradient(135deg, #fce7f3 0%, #f43f5e 40%, #a855f7 100%);
     -webkit-background-clip: text;
@@ -1252,7 +1259,7 @@ body.tutorial-active #tutorial-overlay {
 @media (prefers-reduced-motion: reduce) {
     .reveal .k-word,
     .k-accent,
-    .k-char,
+    .k-bounce,
     .k-underline {
         opacity: 1 !important;
         transform: none !important;
