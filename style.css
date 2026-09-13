@@ -953,42 +953,7 @@ body.tutorial-active #tutorial-overlay {
     margin: 0 auto;
 }
 
-.kinetic-badge-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(212, 175, 55, 0.12);
-    border: 1px solid rgba(212, 175, 55, 0.35);
-    padding: 6px 16px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #FFD700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-    animation: badgePulse 3s infinite ease-in-out;
-}
 
-.badge-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #00ff88;
-    box-shadow: 0 0 10px #00ff88;
-    animation: dotBlink 1.5s infinite ease-in-out;
-}
-
-@keyframes dotBlink {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-}
-
-@keyframes badgePulse {
-    0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.15); }
-    50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.35); }
-}
 
 .kinetic-hero-title {
     font-family: var(--font-antique);
@@ -1087,12 +1052,12 @@ body.tutorial-active #tutorial-overlay {
 
 
 /* ===================================================
-   SUBHEADING KINETIC TYPOGRAPHY SYSTEM (WOW EFFECTS)
+   KINETIC TYPOGRAPHY MOTION SYSTEM (GERAK-GERAK NYATA)
    =================================================== */
 
 .kinetic-subheading {
     font-family: var(--font-antique);
-    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
     font-weight: 700;
     line-height: 1.25;
     letter-spacing: -0.02em;
@@ -1100,11 +1065,7 @@ body.tutorial-active #tutorial-overlay {
     margin-bottom: 1.2rem;
     position: relative;
     cursor: default;
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
-}
-
-.kinetic-subheading:hover {
-    transform: translateY(-3px) scale(1.012);
+    display: block;
 }
 
 .kinetic-subheading-macos {
@@ -1117,143 +1078,185 @@ body.tutorial-active #tutorial-overlay {
     color: #ffffff;
     margin-bottom: 1rem;
     cursor: default;
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    display: block;
 }
 
-.kinetic-subheading-macos:hover {
-    transform: translateY(-2px);
-}
-
-/* Masked Rise on Scroll */
-.kinetic-subheading .kinetic-text-wrap,
-.kinetic-subheading-macos .kinetic-text-wrap {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: top;
-    padding: 0.1em 0.2em;
-}
-
-.reveal.kinetic-subheading .kinetic-text-wrap > span,
-.reveal.kinetic-subheading-macos .kinetic-text-wrap > span {
+/* Base Word Split & Stagger Entrance (from /better-ui: 80ms stagger) */
+.reveal .k-word {
     display: inline-block;
     opacity: 0;
-    transform: translateY(115%);
-    filter: blur(10px);
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(28px);
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    margin: 0 0.1em;
+    color: #ffffff;
 }
 
-.reveal.kinetic-subheading.active .kinetic-text-wrap > span,
-.reveal.kinetic-subheading-macos.active .kinetic-text-wrap > span {
+.reveal.active .k-word {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0px);
 }
 
-/* Glow Word 1: Purple Neon (Ciri-ciri: Satu Klik) */
-.kinetic-glow-word-purple {
-    background: linear-gradient(135deg, #c084fc 0%, #ffffff 25%, #a855f7 50%, #f472b6 75%, #c084fc 100%);
-    background-size: 250% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.reveal.active .k-word:nth-child(1) { transition-delay: 0.00s; }
+.reveal.active .k-word:nth-child(2) { transition-delay: 0.08s; }
+.reveal.active .k-word:nth-child(3) { transition-delay: 0.16s; }
+.reveal.active .k-word:nth-child(4) { transition-delay: 0.24s; }
+.reveal.active .k-word:nth-child(5) { transition-delay: 0.32s; }
+.reveal.active .k-word:nth-child(6) { transition-delay: 0.40s; }
+
+/* The Accent Word: Physical Kinetic Movement & Floating Sway */
+.k-accent {
+    display: inline-block;
+    position: relative;
+    font-style: italic;
+    padding: 0 0.12em 0.2em;
+    margin: 0 0.12em;
+    vertical-align: baseline;
+    cursor: pointer;
+    will-change: transform;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: 0.20s;
+}
+
+.reveal.active .k-accent {
+    opacity: 1;
+    transform: translateY(0);
+    animation: kWordFloat 3.8s ease-in-out infinite alternate;
+}
+
+/* Continuous Floating Sway Motion */
+@keyframes kWordFloat {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(-1deg);
+    }
+    100% {
+        transform: translateY(3px) rotate(0.8deg);
+    }
+}
+
+/* Interactive Spring Hover (/better-ui: cubic-bezier spring response) */
+.k-accent:hover {
+    animation-play-state: paused !important;
+    transform: translateY(-8px) scale(1.06) !important;
+    transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.k-accent:hover .k-char {
+    animation-play-state: paused !important;
+}
+
+/* Individual Character Undulating Wave (Gerak-gerak berterusan) */
+.k-char {
+    display: inline-block;
+    will-change: transform;
+    animation: kCharBob 2.2s ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+}
+
+.k-space {
+    display: inline-block;
+    width: 0.26em;
+}
+
+@keyframes kCharBob {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    30% {
+        transform: translateY(-7px);
+    }
+    65% {
+        transform: translateY(2.5px);
+    }
+}
+
+/* Kinetic Animated Underline */
+.k-underline {
+    position: absolute;
+    bottom: -3px;
+    left: 4%;
+    width: 92%;
+    height: 3px;
+    border-radius: 999px;
+    pointer-events: none;
+    animation: kUnderlineSlide 3s ease-in-out infinite alternate;
+}
+
+@keyframes kUnderlineSlide {
+    0% {
+        transform: scaleX(0.4) translateX(-20%);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scaleX(1) translateX(0%);
+        opacity: 1;
+    }
+    100% {
+        transform: scaleX(0.5) translateX(20%);
+        opacity: 0.6;
+    }
+}
+
+/* Color Palettes (Crisp, High Contrast, Luxury Gradient, No Muddy Glow) */
+.k-accent-purple {
     color: #c084fc;
-    font-style: italic;
-    display: inline-block;
-    animation: flowPurple 4s linear infinite, purpleAura 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 25px rgba(192, 132, 252, 0.65));
-    padding: 0 4px;
-}
-
-@keyframes flowPurple {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-@keyframes purpleAura {
-    0%, 100% { filter: drop-shadow(0 0 18px rgba(192, 132, 252, 0.5)); }
-    50% { filter: drop-shadow(0 0 32px rgba(192, 132, 252, 0.9)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)); }
-}
-
-/* Glow Word 2: Gold Metallic (Keselamatan: Terjamin & macOS: macOS) */
-.kinetic-glow-word-gold {
-    background: linear-gradient(135deg, #ffd700 0%, #ffffff 25%, #f59e0b 50%, #fef08a 75%, #ffd700 100%);
-    background-size: 250% auto;
+    background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 45%, #a855f7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.k-accent-purple .k-underline {
+    background: linear-gradient(90deg, transparent, #c084fc, #a855f7, transparent);
+}
+
+.k-accent-gold {
     color: #FFD700;
-    font-style: italic;
-    display: inline-block;
-    animation: flowGold 4s linear infinite, goldAura 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.65));
-    padding: 0 4px;
-}
-
-@keyframes flowGold {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-@keyframes goldAura {
-    0%, 100% { filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.5)); }
-    50% { filter: drop-shadow(0 0 32px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)); }
-}
-
-/* Glow Word 3: Cyber Blue (Muat Turun: Sekarang) */
-.kinetic-glow-word-blue {
-    background: linear-gradient(135deg, #38bdf8 0%, #ffffff 25%, #60a5fa 50%, #a5b4fc 75%, #38bdf8 100%);
-    background-size: 250% auto;
+    background: linear-gradient(135deg, #fffbeb 0%, #FFD700 50%, #F59E0B 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.k-accent-gold .k-underline {
+    background: linear-gradient(90deg, transparent, #FFD700, #F59E0B, transparent);
+}
+
+.k-accent-blue {
     color: #38bdf8;
-    font-style: italic;
-    display: inline-block;
-    animation: flowBlue 4s linear infinite, blueAura 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.65));
-    padding: 0 4px;
-}
-
-@keyframes flowBlue {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-@keyframes blueAura {
-    0%, 100% { filter: drop-shadow(0 0 18px rgba(56, 189, 248, 0.5)); }
-    50% { filter: drop-shadow(0 0 32px rgba(56, 189, 248, 0.9)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)); }
-}
-
-/* Glow Word 4: Cosmic Aurora (CTA: Merevolusi) */
-.kinetic-glow-word-cosmic {
-    background: linear-gradient(135deg, #f43f5e 0%, #ffffff 20%, #ec4899 40%, #8b5cf6 60%, #38bdf8 80%, #f43f5e 100%);
-    background-size: 300% auto;
+    background: linear-gradient(135deg, #e0f2fe 0%, #38bdf8 50%, #60a5fa 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.k-accent-blue .k-underline {
+    background: linear-gradient(90deg, transparent, #38bdf8, #60a5fa, transparent);
+}
+
+.k-accent-cosmic {
     color: #f43f5e;
-    font-style: italic;
-    display: inline-block;
-    animation: flowCosmic 5s linear infinite, cosmicAura 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 28px rgba(244, 63, 94, 0.65));
-    padding: 0 4px;
+    background: linear-gradient(135deg, #fce7f3 0%, #f43f5e 40%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-@keyframes flowCosmic {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+.k-accent-cosmic .k-underline {
+    background: linear-gradient(90deg, transparent, #f43f5e, #a855f7, transparent);
 }
 
-@keyframes cosmicAura {
-    0%, 100% { filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.5)); }
-    50% { filter: drop-shadow(0 0 35px rgba(244, 63, 94, 0.95)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.7)); }
-}
-
-/* Section Header Badges */
-.section-badge-center {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .reveal .k-word,
+    .k-accent,
+    .k-char,
+    .k-underline {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
 }

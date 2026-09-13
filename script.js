@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     reveals.forEach((reveal) => {
         revealOnScroll.observe(reveal);
+        // Immediate viewport check for instant motion activation
+        const rect = reveal.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            reveal.classList.add('active');
+        }
     });
 
     // 3D Kinetic Word Rotator (Aesthetic Dynamic Typography)
