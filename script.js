@@ -22,6 +22,28 @@ document.addEventListener('DOMContentLoaded', () => {
         revealOnScroll.observe(reveal);
     });
 
+    // 3D Kinetic Word Rotator (Aesthetic Dynamic Typography)
+    const wordSlides = document.querySelectorAll('.kinetic-word-slide');
+    if (wordSlides.length > 1) {
+        let currentWordIdx = 0;
+        setInterval(() => {
+            const currentSlide = wordSlides[currentWordIdx];
+            if (currentSlide) {
+                currentSlide.classList.remove('active');
+                currentSlide.classList.add('exit');
+                setTimeout(() => {
+                    currentSlide.classList.remove('exit');
+                }, 650);
+            }
+
+            currentWordIdx = (currentWordIdx + 1) % wordSlides.length;
+            const nextSlide = wordSlides[currentWordIdx];
+            if (nextSlide) {
+                nextSlide.classList.add('active');
+            }
+        }, 2600);
+    }
+
     // Live Stats Analytics & Real Data Tracker
     const statActiveUsersEl = document.getElementById('stat-active-users');
     const statDownloadsEl = document.getElementById('stat-downloads');

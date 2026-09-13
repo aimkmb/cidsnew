@@ -947,87 +947,116 @@ body.tutorial-active #tutorial-overlay {
    KINETIC TYPOGRAPHY ENGINE (AESTHETIC MOTION SYSTEM)
    =================================================== */
 
-.kinetic-title {
-    letter-spacing: -0.025em;
-    perspective: 1200px;
-    margin-bottom: 1.8rem;
-    line-height: 1.15;
+.hero-content {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
-.kinetic-line {
+.kinetic-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #FFD700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    animation: badgePulse 3s infinite ease-in-out;
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00ff88;
+    box-shadow: 0 0 10px #00ff88;
+    animation: dotBlink 1.5s infinite ease-in-out;
+}
+
+@keyframes dotBlink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.15); }
+    50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.35); }
+}
+
+.kinetic-hero-title {
+    font-family: var(--font-antique);
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    perspective: 1000px;
+}
+
+.kinetic-prefix {
     display: block;
-    overflow: hidden;
-    padding-bottom: 0.12em;
-    vertical-align: top;
+    color: #ffffff;
+    text-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.3rem;
 }
 
-.kinetic-word {
+.kinetic-rotator-container {
     display: inline-block;
-    opacity: 0;
-    transform: translateY(125%) rotate(2.5deg);
-    filter: blur(12px);
-    animation: kineticWordRise 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: var(--d, 0s);
-    margin-right: 0.26em;
-    will-change: transform, opacity, filter;
+    position: relative;
+    min-height: 1.3em;
+    vertical-align: middle;
+    perspective: 800px;
 }
 
-.kinetic-char {
-    display: inline-block;
+.kinetic-word-slide {
+    display: none;
+    white-space: nowrap;
     opacity: 0;
-    transform: translateY(130%) scale(0.9);
+    transform: translateY(80%) rotateX(-50deg);
     filter: blur(10px);
-    animation: kineticCharPop 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: var(--d, 0s);
-    will-change: transform, opacity, filter;
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center bottom;
 }
 
-.kinetic-space {
-    width: 0.24em;
+.kinetic-word-slide.active {
+    display: inline-block;
+    opacity: 1;
+    transform: translateY(0%) rotateX(0deg);
+    filter: blur(0px);
+    position: relative;
 }
 
-@keyframes kineticWordRise {
-    0% {
-        opacity: 0;
-        transform: translateY(125%) rotate(2.5deg);
-        filter: blur(12px);
-    }
-    40% {
-        opacity: 0.8;
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) rotate(0deg);
-        filter: blur(0px);
-    }
+.kinetic-word-slide.exit {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transform: translateY(-80%) rotateX(50deg);
+    filter: blur(10px);
+    transform-origin: center top;
 }
 
-@keyframes kineticCharPop {
-    0% {
-        opacity: 0;
-        transform: translateY(130%) scale(0.85);
-        filter: blur(10px);
-    }
-    50% {
-        opacity: 0.95;
-        filter: blur(2px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0px);
-    }
-}
-
-/* Kinetic Gold Shimmer & Ambient Glow */
-.highlight-gold.kinetic-gold-shimmer {
-    background: linear-gradient(120deg, #d4af37 0%, #fff6c2 25%, #d4af37 50%, #fef3c7 75%, #d4af37 100%);
-    background-size: 250% auto;
+.gradient-text-gold {
+    background: linear-gradient(135deg, #FFD700 0%, #FFF6BF 25%, #F59E0B 50%, #FBBF24 75%, #FFD700 100%);
+    background-size: 220% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmerSweep 5s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.35));
+    color: #FFD700;
+    font-style: italic;
     display: inline-block;
+    animation: goldShimmerSweep 4s linear infinite;
+    filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.45));
+    padding: 0 4px;
 }
 
 @keyframes goldShimmerSweep {
@@ -1038,59 +1067,17 @@ body.tutorial-active #tutorial-overlay {
 
 /* Kinetic Hero Description & Actions */
 .hero-desc.kinetic-desc {
-    opacity: 0;
-    filter: blur(10px);
-    transform: translateY(18px);
-    animation: kineticFocusIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.72s forwards;
-    will-change: transform, opacity, filter;
+    color: var(--text-muted);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    max-width: 760px;
+    margin: 0 auto;
+    line-height: 1.7;
 }
 
-@keyframes kineticFocusIn {
-    0% {
-        opacity: 0;
-        filter: blur(10px);
-        transform: translateY(18px);
-    }
-    100% {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0);
-    }
-}
-
-.hero-actions.kinetic-actions {
-    opacity: 0;
-    transform: translateY(22px);
-    animation: kineticFocusIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.92s forwards;
-}
-
-/* Scroll-triggered Section Titles with Kinetic Entrance */
-.section-title.reveal.active,
-.antique-title.reveal.active {
-    animation: kineticSectionTitle 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes kineticSectionTitle {
-    0% {
-        opacity: 0;
-        transform: translateY(28px);
-        filter: blur(6px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-    }
-}
-
-/* Accessibility & Reduced Motion */
+/* Accessibility: Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-    .kinetic-word,
-    .kinetic-char,
-    .kinetic-desc,
-    .kinetic-actions,
-    .section-title.reveal.active,
-    .antique-title.reveal.active {
+    .kinetic-word-slide,
+    .gradient-text-gold {
         opacity: 1 !important;
         transform: none !important;
         filter: none !important;
