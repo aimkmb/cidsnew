@@ -23,8 +23,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Live Stats Analytics & Real Data Tracker
+    const statActiveUsersEl = document.getElementById('stat-active-users');
     const statDownloadsEl = document.getElementById('stat-downloads');
     const statVisitorsEl = document.getElementById('stat-visitors');
+
+    // Prefetch pengguna aktif sebenar dari Pangkalan Data Web Lesen (Supabase)
+    let liveActiveUsers = 5;
+    fetch('/api/stats')
+        .then(res => res.json())
+        .then(data => {
+            if (data && typeof data.activeUsers === 'number') {
+                liveActiveUsers = data.activeUsers;
+                if (statActiveUsersEl && hasFetchedStats) {
+                    statActiveUsersEl.innerText = liveActiveUsers.toLocaleString();
+                }
+            }
+        })
+        .catch(err => {
+            console.warn('Live stats fetch fallback to DB count:', err);
+        });
     
     // Kiraan berasaskan data sebenar corong (funnel) rasmi CIDS Suites Pro:
     // (5 peranti berlesen aktif di Supabase, 63 tontonan video panduan YouTube)
@@ -77,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hasFetchedStats = true;
             const metrics = getRealMetrics();
 
+            if (statActiveUsersEl) animateValue(statActiveUsersEl, 0, liveActiveUsers, 1400);
             if (statDownloadsEl) animateValue(statDownloadsEl, 0, metrics.downloads, 1800);
             if (statVisitorsEl) animateValue(statVisitorsEl, 0, metrics.visitors, 2000);
             
