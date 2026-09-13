@@ -941,3 +941,159 @@ body.tutorial-active #tutorial-overlay {
     color: #374151;
     border-color: #9ca3af;
 }
+
+
+/* ===================================================
+   KINETIC TYPOGRAPHY ENGINE (AESTHETIC MOTION SYSTEM)
+   =================================================== */
+
+.kinetic-title {
+    letter-spacing: -0.025em;
+    perspective: 1200px;
+    margin-bottom: 1.8rem;
+    line-height: 1.15;
+}
+
+.kinetic-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.12em;
+    vertical-align: top;
+}
+
+.kinetic-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(125%) rotate(2.5deg);
+    filter: blur(12px);
+    animation: kineticWordRise 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--d, 0s);
+    margin-right: 0.26em;
+    will-change: transform, opacity, filter;
+}
+
+.kinetic-char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(130%) scale(0.9);
+    filter: blur(10px);
+    animation: kineticCharPop 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--d, 0s);
+    will-change: transform, opacity, filter;
+}
+
+.kinetic-space {
+    width: 0.24em;
+}
+
+@keyframes kineticWordRise {
+    0% {
+        opacity: 0;
+        transform: translateY(125%) rotate(2.5deg);
+        filter: blur(12px);
+    }
+    40% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+        filter: blur(0px);
+    }
+}
+
+@keyframes kineticCharPop {
+    0% {
+        opacity: 0;
+        transform: translateY(130%) scale(0.85);
+        filter: blur(10px);
+    }
+    50% {
+        opacity: 0.95;
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0px);
+    }
+}
+
+/* Kinetic Gold Shimmer & Ambient Glow */
+.highlight-gold.kinetic-gold-shimmer {
+    background: linear-gradient(120deg, #d4af37 0%, #fff6c2 25%, #d4af37 50%, #fef3c7 75%, #d4af37 100%);
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShimmerSweep 5s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.35));
+    display: inline-block;
+}
+
+@keyframes goldShimmerSweep {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Kinetic Hero Description & Actions */
+.hero-desc.kinetic-desc {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(18px);
+    animation: kineticFocusIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.72s forwards;
+    will-change: transform, opacity, filter;
+}
+
+@keyframes kineticFocusIn {
+    0% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateY(18px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: translateY(0);
+    }
+}
+
+.hero-actions.kinetic-actions {
+    opacity: 0;
+    transform: translateY(22px);
+    animation: kineticFocusIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.92s forwards;
+}
+
+/* Scroll-triggered Section Titles with Kinetic Entrance */
+.section-title.reveal.active,
+.antique-title.reveal.active {
+    animation: kineticSectionTitle 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes kineticSectionTitle {
+    0% {
+        opacity: 0;
+        transform: translateY(28px);
+        filter: blur(6px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* Accessibility & Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .kinetic-word,
+    .kinetic-char,
+    .kinetic-desc,
+    .kinetic-actions,
+    .section-title.reveal.active,
+    .antique-title.reveal.active {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        animation: none !important;
+    }
+}
