@@ -27,51 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const statDownloadsEl = document.getElementById('stat-downloads');
     const statVisitorsEl = document.getElementById('stat-visitors');
 
-    // Prefetch pengguna aktif sebenar dari Pangkalan Data Web Lesen (Supabase)
-    let liveActiveUsers = 5;
-    fetch('/api/stats')
-        .then(res => res.json())
-        .then(data => {
-            if (data && typeof data.activeUsers === 'number') {
-                liveActiveUsers = data.activeUsers;
-                if (statActiveUsersEl && hasFetchedStats) {
-                    statActiveUsersEl.innerText = liveActiveUsers.toLocaleString();
-                }
-            }
-        })
-        .catch(err => {
-            console.warn('Live stats fetch fallback to DB count:', err);
-        });
-    
-    // Kiraan berasaskan data sebenar corong (funnel) rasmi CIDS Suites Pro:
-    // (5 peranti berlesen aktif di Supabase, 63 tontonan video panduan YouTube)
-    const getRealMetrics = () => {
-        const baseVisitors = 384;
-        const baseDownloads = 54;
-        
-        // Kiraan peningkatan organik sejak rujukan pelancaran
-        const launchDate = new Date('2026-09-01T00:00:00');
-        const elapsedDays = Math.max(0, Math.floor((Date.now() - launchDate.getTime()) / (1000 * 60 * 60 * 24)));
-        
-        const organicVisitors = baseVisitors + (elapsedDays * 11);
-        const organicDownloads = baseDownloads + (elapsedDays * 2);
-
-        // Jejak lawatan pengguna secara langsung (local persistence)
-        let localVisitors = parseInt(localStorage.getItem('cids_v_count') || '0', 10);
-        if (!sessionStorage.getItem('cids_session_counted')) {
-            sessionStorage.setItem('cids_session_counted', '1');
-            localVisitors += 1;
-            localStorage.setItem('cids_v_count', localVisitors.toString());
-        }
-
-        let localDownloads = parseInt(localStorage.getItem('cids_d_count') || '0', 10);
-
-        return {
-            visitors: Math.max(organicVisitors, baseVisitors + localVisitors),
-            downloads: Math.max(organicDownloads, baseDownloads + localDownloads)
-        };
-    };
-
     const animateValue = (obj, start, end, duration) => {
         if (!obj) return;
         let startTimestamp = null;
@@ -86,18 +41,48 @@ document.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(step);
     };
 
-    let hasFetchedStats = false;
+    let latestStats = {
+        activeUsers: 5,
+        visitors: 521,
+        downloads: 78
+    };
+
+    let hasAnimated = false;
+
+    const triggerStatsAnimation = () => {
+        if (hasAnimated) return;
+        hasAnimated = true;
+        if (statActiveUsersEl) animateValue(statActiveUsersEl, 0, latestStats.activeUsers, 1200);
+        if (statDownloadsEl) animateValue(statDownloadsEl, 0, latestStats.downloads, 1400);
+        if (statVisitorsEl) animateValue(statVisitorsEl, 0, latestStats.visitors, 1400);
+    };
+
+    // Ambil data langsung dari API (Supabase & Hits.sh external tracker)
+    // Setiap kali pelawat buka web (dari iPhone / PC / Mac), sistem hantar hit=1 ke backend
+    const cacheBuster = Date.now();
+    fetch('/api/stats?hit=1&t=' + cacheBuster)
+        .then(res => res.json())
+        .then(data => {
+            if (data) {
+                if (typeof data.activeUsers === 'number') latestStats.activeUsers = data.activeUsers;
+                if (typeof data.visitors === 'number') latestStats.visitors = data.visitors;
+                if (typeof data.downloads === 'number') latestStats.downloads = data.downloads;
+
+                if (hasAnimated) {
+                    if (statActiveUsersEl) statActiveUsersEl.innerText = latestStats.activeUsers.toLocaleString();
+                    if (statVisitorsEl) statVisitorsEl.innerText = latestStats.visitors.toLocaleString();
+                    if (statDownloadsEl) statDownloadsEl.innerText = latestStats.downloads.toLocaleString();
+                }
+            }
+        })
+        .catch(err => {
+            console.warn('Live stats fetch fallback:', err);
+        });
 
     const statsObserver = new IntersectionObserver((entries, observer) => {
         const statsSection = entries.find(e => e.isIntersecting);
-        if (statsSection && !hasFetchedStats) {
-            hasFetchedStats = true;
-            const metrics = getRealMetrics();
-
-            if (statActiveUsersEl) animateValue(statActiveUsersEl, 0, liveActiveUsers, 1400);
-            if (statDownloadsEl) animateValue(statDownloadsEl, 0, metrics.downloads, 1800);
-            if (statVisitorsEl) animateValue(statVisitorsEl, 0, metrics.visitors, 2000);
-            
+        if (statsSection) {
+            triggerStatsAnimation();
             observer.disconnect();
         }
     }, revealOptions);
@@ -107,19 +92,16 @@ document.addEventListener('DOMContentLoaded', () => {
         statsObserver.observe(statsContainer);
     }
 
-    // Jejak klik muat turun secara langsung (Live +1 tick animation)
+    // Jejak klik muat turun secara langsung (Live +1 tick ke DB & skrin)
     const downloadButtons = document.querySelectorAll('.btn-download');
     downloadButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            let localDownloads = parseInt(localStorage.getItem('cids_d_count') || '0', 10) + 1;
-            localStorage.setItem('cids_d_count', localDownloads.toString());
-            
+            latestStats.downloads += 1;
             if (statDownloadsEl) {
                 const currentVal = parseInt(statDownloadsEl.innerText.replace(/,/g, '') || '0', 10);
-                if (currentVal > 0) {
-                    animateValue(statDownloadsEl, currentVal, currentVal + 1, 300);
-                }
+                animateValue(statDownloadsEl, currentVal, currentVal + 1, 300);
             }
+            fetch('/api/stats?download=1&t=' + Date.now()).catch(() => {});
         });
     });
 
