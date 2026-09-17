@@ -9,30 +9,73 @@
         const siteNav = document.getElementById('siteNav');
         const motionToggle = document.getElementById('motionToggle');
         const heroArt = document.getElementById('heroArt');
+        const heroWord = document.querySelector('.hero-word');
+        const heroLetters = heroWord ? [...heroWord.querySelectorAll('.hero-letter')] : [];
         let userMotionChoice = false;
+        let flowFrame = 0;
+        let flowTime = 0;
+        const letterMotion = heroLetters.map(() => ({ x: 0, y: 0, rotation: 0, tx: 0, ty: 0, tr: 0 }));
+
+        function resetHeading() {
+            cancelAnimationFrame(flowFrame);
+            flowFrame = 0;
+            flowTime = 0;
+            letterMotion.forEach((motion, index) => {
+                Object.keys(motion).forEach(key => { motion[key] = 0; });
+                heroLetters[index].style.removeProperty('transform');
+            });
+        }
+
+        function animateHeading(time) {
+            const blend = 1 - Math.exp(-Math.min(time - (flowTime || time - 16), 64) / 95);
+            flowTime = time;
+            let moving = false;
+            letterMotion.forEach((motion, index) => {
+                motion.x += (motion.tx - motion.x) * blend;
+                motion.y += (motion.ty - motion.y) * blend;
+                motion.rotation += (motion.tr - motion.rotation) * blend;
+                const unsettled = Math.abs(motion.tx - motion.x) + Math.abs(motion.ty - motion.y) + Math.abs(motion.tr - motion.rotation) > 0.02;
+                moving ||= unsettled;
+                if (!unsettled) {
+                    motion.x = motion.tx;
+                    motion.y = motion.ty;
+                    motion.rotation = motion.tr;
+                }
+                heroLetters[index].style.transform = `translate(${motion.x.toFixed(3)}px, ${motion.y.toFixed(3)}px) rotate(${motion.rotation.toFixed(3)}deg)`;
+            });
+            flowFrame = moving ? requestAnimationFrame(animateHeading) : 0;
+            if (!moving) flowTime = 0;
+        }
+
+        function motionAllowed() {
+            return finePointer.matches && !reducedMotion.matches && !document.hidden &&
+                !document.body.classList.contains('motion-paused');
+        }
 
         function resetHero() {
-            if (!heroArt) return;
-            heroArt.style.setProperty('--pointer-x', '0deg');
-            heroArt.style.setProperty('--pointer-y', '0deg');
+            resetHeading();
+            heroArt?.style.setProperty('--pointer-x', '0deg');
+            heroArt?.style.setProperty('--pointer-y', '0deg');
         }
 
         function setMotionPaused(paused) {
-            document.body.classList.toggle('motion-paused', paused);
+            const effectivePause = paused || reducedMotion.matches;
+            document.body.classList.toggle('motion-paused', effectivePause);
             if (motionToggle) {
-                motionToggle.setAttribute('aria-pressed', String(paused));
-                motionToggle.textContent = paused ? 'Main animasi' : 'Jeda animasi';
+                motionToggle.setAttribute('aria-pressed', String(effectivePause));
+                motionToggle.disabled = reducedMotion.matches;
+                motionToggle.textContent = reducedMotion.matches ? 'Animasi dimatikan oleh sistem' : effectivePause ? 'Main animasi' : 'Jeda animasi';
             }
-            if (paused) resetHero();
+            if (effectivePause) resetHero();
         }
 
         setMotionPaused(reducedMotion.matches);
         motionToggle?.addEventListener('click', () => {
-            userMotionChoice = true;
-            setMotionPaused(!document.body.classList.contains('motion-paused'));
+            userMotionChoice = !userMotionChoice;
+            setMotionPaused(userMotionChoice);
         });
         reducedMotion.addEventListener('change', () => {
-            if (!userMotionChoice) setMotionPaused(reducedMotion.matches);
+            setMotionPaused(userMotionChoice);
             if (reducedMotion.matches) {
                 resetHero();
                 document.querySelectorAll('.reveal').forEach(element => {
@@ -139,6 +182,8 @@
                 moduleImage.alt = `Paparan ${module.name} dalam CIDS Suites Pro`;
             }
             moduleImageButton?.setAttribute('aria-label', `Besarkan paparan ${module.name}`);
+            const moduleLabel = document.querySelector('.module-label');
+            if (moduleLabel) moduleLabel.textContent = module.name;
             const announcement = document.getElementById('moduleAnnouncement');
             if (announce && announcement) {
                 announcement.textContent = `${module.name}, modul ${currentModule + 1} daripada ${modules.length}.`;
@@ -333,6 +378,40 @@
                 heroArt.style.setProperty('--pointer-y', `${(x * 8).toFixed(2)}deg`);
             });
             heroArt.addEventListener('pointerleave', resetHero);
+        }
+
+        if (heroWord && heroLetters.length) {
+            heroWord.addEventListener('pointermove', event => {
+                if (!motionAllowed()) return;
+                const bounds = heroWord.getBoundingClientRect();
+                if (!bounds.width || !bounds.height) return;
+                const cx = event.clientX - bounds.left;
+                const cy = event.clientY - bounds.top;
+                heroLetters.forEach((letter, i) => {
+                    const rect = letter.getBoundingClientRect();
+                    const lx = rect.left + rect.width / 2 - bounds.left;
+                    const ly = rect.top + rect.height / 2 - bounds.top;
+                    const dx = cx - lx;
+                    const dy = cy - ly;
+                    const dist = Math.hypot(dx, dy);
+                    const maxDist = 180;
+                    if (dist < maxDist) {
+                        const force = (1 - dist / maxDist) * 18;
+                        const angle = Math.atan2(dy, dx);
+                        letterMotion[i].tx = Math.cos(angle) * force;
+                        letterMotion[i].ty = Math.sin(angle) * force;
+                        letterMotion[i].tr = (Math.random() - 0.5) * 6;
+                    } else {
+                        letterMotion[i].tx = 0;
+                        letterMotion[i].ty = 0;
+                        letterMotion[i].tr = 0;
+                    }
+                });
+                if (!flowFrame) flowFrame = requestAnimationFrame(animateHeading);
+            });
+            heroWord.addEventListener('pointerleave', resetHeading);
+            heroWord.addEventListener('pointercancel', resetHeading);
+            heroWord.addEventListener('pointerdown', resetHeading);
         }
     }
 
